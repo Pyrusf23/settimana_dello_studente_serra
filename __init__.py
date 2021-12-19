@@ -6,4 +6,7 @@ app = Flask(__name__)
 def hello_world():
     return 'Hello from Flask!'
 
+from settings import Debug
+app.config.from_object(Debug)
+
 app.run()
