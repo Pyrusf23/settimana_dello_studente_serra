@@ -1,0 +1,61 @@
+.form-container {
+    width: 100%;
+    height: 35rem;
+    padding: 1rem;
+    background-color: rgb(255, 255, 255);
+    border-radius: 0 0 5px 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.tab {
+    color: #13112b;
+}
+
+.tab:hover {
+    color: #ddb575;
+}
+
+.my-custom-scrollbar {
+    margin-bottom: 8rem;
+    position: relative;
+    height: 25rem;
+    overflow: auto;
+}
+
+.table-wrapper-scroll-y {
+    display: block;
+}
+
+@media screen and (max-width: 1199px) {
+    .my-custom-scrollbar {
+        margin-top: 5rem;
+    } 
+}
+
+.my-table {
+    background-color: #13112B;
+    color: white;
+}
+
+.my-table:hover {
+    color: white;
+}
+
+.my-table tbody tr:hover {
+    color: #DD9143;
+}
+
+.form-size {
+    width: 15rem;
+}
+
+.center {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
