@@ -16,8 +16,12 @@
     
         <form class="form" method="POST" action="{{ url_for('auth.registrazione') }}">
             {{ form.hidden_tag() }}
-            <div class="form-group">
-                {{ form.email.label }}{{ form.email(class_="form-control") }}
+            <div class="form-group">                
+                {{ form.email.label }}
+                <div class="input-group">
+                    {{ form.email(class_="form-control") }}
+                    <div class="input-group-text">@isisserra.edu.it</div>
+                </div>
             </div>
             <div class="form-group mt-3">
                 {{ form.password.label }}{{ form.password(class_="form-control") }}
@@ -36,7 +40,7 @@
             {% endif %}
             {% endwith %}
             <div class="btn-container">
-                <input type="submit" class="btn my-btn" id="id_button" value="Accedi">
+                <input type="submit" class="btn my-btn" id="id_button" value="Registrati">
             </div>
         </form>
     </div>
