@@ -18,10 +18,9 @@ def registrazione():
 
     if form.validate_on_submit() and request.method == 'POST':
         email = form.email.data
-        username = form.username.data
         password = form.password.data
         remember = form.remember.data
-        query = User(email, username, password, remember)
+        query = User(email, password, remember)
         db.session.add(query)
         db.session.commit()
         return redirect(url_for('main.index'))
