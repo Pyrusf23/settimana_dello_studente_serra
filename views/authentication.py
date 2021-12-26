@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash
 from forms.loginForm import LoginForm
-from forms.registerForm import RegistrazioneForm
+from forms.registrazioneForm import RegistrazioneForm
 from models import db, User
 from werkzeug.security import check_password_hash
 from flask_login import login_user, current_user, logout_user, login_required
@@ -17,7 +17,7 @@ def registrazione():
     form = RegistrazioneForm()
 
     if form.validate_on_submit() and request.method == 'POST':
-        email = form.email.data
+        email = form.email.data + "@isisserra.edu.it"
         password = form.password.data
         remember = form.remember.data
         query = User(email, password, remember)
@@ -34,7 +34,7 @@ def login():
     form = LoginForm()
 
     if form.validate_on_submit() and request.method == 'POST':
-        user = User.query.filter_by(username=form.username.data).first()
+        user = User.query.filter_by(email=form.email.data).first()
         if user:
             if check_password_hash(user.password, form.password.data):
                 login_user(user, remember=form.remember.data)

@@ -18,7 +18,7 @@
     justify-content: center;
 }
 
-.login-name:link, .login-name:visited, .login-name:hover, .login-name:active{
+.registrazione-name:link, .registrazione-name:visited, .registrazione-name:hover, .registrazione-name:active{
     text-decoration: none;
     text-align: center;
     color: black;

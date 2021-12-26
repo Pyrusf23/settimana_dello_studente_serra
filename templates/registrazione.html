@@ -3,12 +3,16 @@
 {% block title %}Registrazione{% endblock %}
 
 {% block content %}
-<link rel="stylesheet" href="/static/CSS/login.css">
+<link rel="stylesheet" href="/static/CSS/registrazione.css">
 
 <div class="my-container">
     <div class="form-container">
         
-        <div class="img-container"><img src="/static/img/login_logo.png" width="250" height="110" alt=""></div>
+        <div class="name-container">
+            <a class="registrazione-name" href="{{ url_for('main.index') }}">
+                <strong>Settimana dello Studente <br> ISIS Antonio Serra</strong>
+            </a>
+        </div>
     
         <form class="form" method="POST" action="{{ url_for('auth.registrazione') }}">
             {{ form.hidden_tag() }}
