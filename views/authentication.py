@@ -1,8 +1,8 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash
 from forms.loginForm import LoginForm
 from forms.registrazioneForm import RegistrazioneForm
-from models import db, User
-from werkzeug.security import check_password_hash
+from models.db import db
+from models.User import User
 from flask_login import login_user, current_user, logout_user, login_required
 
 
@@ -17,13 +17,15 @@ def registrazione():
     form = RegistrazioneForm()
 
     if form.validate_on_submit() and request.method == 'POST':
-        email = form.email.data + "@isisserra.edu.it"
-        password = form.password.data
-        remember = form.remember.data
-        query = User(email, password, remember)
-        db.session.add(query)
-        db.session.commit()
-        return redirect(url_for('main.index'))
+        try:
+            email = form.email.data + "@isisserra.edu.it"
+            password = form.password.data
+            query = User(email, password)
+            db.session.add(query)
+            db.session.commit()
+            login_user(query, remember=form.remember.data)
+            return redirect(url_for('main.index'))
+        except: flash('Utente già registrato')
 
     return render_template('registrazione.html', form=form)
 
@@ -36,7 +38,7 @@ def login():
     if form.validate_on_submit() and request.method == 'POST':
         user = User.query.filter_by(email=form.email.data).first()
         if user:
-            if check_password_hash(user.password, form.password.data):
+            if user.verifyPassword(form.password.data):
                 login_user(user, remember=form.remember.data)
                 return redirect(url_for('main.index'))
             else: flash('Credenziali errate!')

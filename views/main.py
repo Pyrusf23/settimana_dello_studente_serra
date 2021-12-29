@@ -5,8 +5,8 @@ main = Blueprint("main", __name__)
 
 @main.route("/")
 def index():
-    # if current_user.is_authenticated:
-    #     return render_template("index.html", user=current_user.username)
+    if current_user.is_authenticated:
+        return render_template("index.html", user=current_user.email)
     return render_template("index.html")
 
 @main.app_errorhandler(404)

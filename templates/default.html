@@ -41,14 +41,14 @@
                                     {{ user }}
                                 </a>
 
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                <!-- <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                     <li><a class="dropdown-item">Polveri sottili</a></li>
-                                </ul>
+                                </ul> -->
                             </div>
                         </li>
                         <li class="nav-item mbtn">
                             <div class="mbtn mx-2">
-                                <a class="btn btn-outline-danger" role="button">Logout</a>
+                                <a class="btn btn-outline-danger" href="{{ url_for('auth.logout') }}" role="button">Logout</a>
                             </div>
                         </li>
                     {% else %}

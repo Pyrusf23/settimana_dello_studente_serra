@@ -1,5 +1,4 @@
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
 from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
 
@@ -14,7 +13,7 @@ from models.db import db
 db.init_app(app)
 
 # Importa qui i nuovi modelli
-from models import User
+from models.User import User
 
 migrate = Migrate(app, db)
 manager = Manager(app)
