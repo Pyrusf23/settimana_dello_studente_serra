@@ -14,6 +14,10 @@ db.init_app(app)
 
 # Importa qui i nuovi modelli
 from models.User import User
+from models.Orario import Orario
+from models.Materia import Materia
+from models.Classe import Classe
+# from models.CongiunzioneOMC import ConjOMC
 
 migrate = Migrate(app, db)
 manager = Manager(app)
@@ -27,6 +31,7 @@ if __name__ == "__main__":
 #                  #
 #  Comandi         #
 #  by De Nisi      #
+#  la graffa       #
 #                  #
 ####################
 
