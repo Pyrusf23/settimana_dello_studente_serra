@@ -20,6 +20,9 @@ app.register_blueprint(main)
 from views.authentication import auth
 app.register_blueprint(auth)
 
+from views.dashboard import dashboard
+app.register_blueprint(dashboard)
+
 from models.User import User
 @login_manager.user_loader
 def load_user(user_id):
