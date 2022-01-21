@@ -1,10 +1,19 @@
 from models.db import db
 
-class Orario(db.Model):
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship
+Base = declarative_base()
+
+class Orario(db.Model, Base):
     __tablename__ = "orari"
 
     id = db.Column(db.Integer, primary_key=True)
-    ora_giorno = db.Column(db.String(30), nullable=False, unique=True)
+    giorno = db.Column(db.Integer, nullable=False)
+    ora = db.Column(db.Integer, nullable=False)
 
-    def __init__(self, ora_giorno):
-        self.ora_giorno = ora_giorno
+    orari_materie_classi = relationship("ConjOMC", back_populates="orario")
+    utenti_attivita_orari = relationship("ConjUAO", back_populates="orario")
+
+    def __init__(self, giorno, ora):
+        self.giorno = giorno
+        self.ora = ora
