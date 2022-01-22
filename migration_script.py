@@ -9,19 +9,8 @@ app = Flask(__name__)
 from settings import Debug
 app.config.from_object(Debug)
 
-from models.db import db
+from models import *
 db.init_app(app)
-
-# Importa qui i nuovi modelli
-from models.User import User
-from models.Orario import Orario
-from models.Materia import Materia
-from models.Classe import Classe
-from models.Aula import Aula
-from models.Attivita import Attivita
-from models.ConjOMC import ConjOMC
-from models.ConjAO import ConjAO
-from models.ConjUA import ConjUA
 
 migrate = Migrate(app, db)
 manager = Manager(app)

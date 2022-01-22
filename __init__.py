@@ -11,7 +11,7 @@ login_manager.init_app(app)
 from settings import Debug
 app.config.from_object(Debug)
 
-from models.db import db
+from models import db
 db.init_app(app)
 
 from views.main import main
@@ -23,7 +23,7 @@ app.register_blueprint(auth)
 from views.dashboard import dashboard
 app.register_blueprint(dashboard)
 
-from models.User import User
+from models import User
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
