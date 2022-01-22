@@ -12,7 +12,7 @@ class Orario(db.Model, Base):
     ora = db.Column(db.Integer, nullable=False)
 
     orari_materie_classi = relationship("ConjOMC", back_populates="orario")
-    utenti_attivita_orari = relationship("ConjUAO", back_populates="orario")
+    attivita_orari = relationship("ConjAO", back_populates="orario")
 
     def __init__(self, giorno, ora):
         self.giorno = giorno

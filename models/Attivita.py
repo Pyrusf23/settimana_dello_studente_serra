@@ -15,7 +15,7 @@ class Attivita(db.Model, Base):
     num_iscritti = db.Column(db.Integer, nullable=False, default=0)
 
     aula = relationship("Aula", back_populates="attivita")
-    utenti_attivita_orari = relationship("conjUAO", back_populates="attivita")
+    attivita_orari = relationship("conjAO", back_populates="attivita")
 
     def __init__(self, id_aula, nome, descrizione, responsabile, num_iscritti):
         self.id_aula = id_aula

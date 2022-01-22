@@ -15,7 +15,7 @@ class User(UserMixin, db.Model, Base):
     id_classe = db.Column(db.Integer, db.ForeignKey('classi.id'), nullable=False)
 
     classe = relationship("Classe", back_populates="utenti")
-    utenti_attivita_orari = relationship("ConjUAO", back_populates="utente")
+    utenti_attivita = relationship("ConjUA", back_populates="utente")
 
     def __init__(self, email, password, id_classe):
         self.email = email
