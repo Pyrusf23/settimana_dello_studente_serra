@@ -1,4 +1,4 @@
-from models import db
+from models.db import db
 
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship

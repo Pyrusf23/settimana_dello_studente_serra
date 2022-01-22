@@ -17,7 +17,11 @@ from models.User import User
 from models.Orario import Orario
 from models.Materia import Materia
 from models.Classe import Classe
-# from models.CongiunzioneOMC import ConjOMC
+from models.Aula import Aula
+from models.Attivita import Attivita
+from models.ConjOMC import ConjOMC
+from models.ConjAO import ConjAO
+from models.ConjUA import ConjUA
 
 migrate = Migrate(app, db)
 manager = Manager(app)
