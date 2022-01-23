@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash
 from forms.loginForm import LoginForm
 from forms.registrazioneForm import RegistrazioneForm
-from models import db, User
+from models import db, User, execute_query
 from flask_login import login_user, current_user, logout_user, login_required
 
 
@@ -12,5 +12,12 @@ dashboard = Blueprint('dashboard', __name__)
 @dashboard.route("/attivita")
 @login_required
 def activities():
-
-    return render_template("attivita.html", user=current_user.email)
+    materie_query = """SELECT orari.giorno, orari.ora, materie.nome_materia
+    FROM utenti, materie, orari, orari_materie_classi
+    WHERE orari.id=orari_materie_classi.id_orario
+	AND materie.id=orari_materie_classi.id_materia
+	AND orari_materie_classi.id_classe=utenti.id_classe
+	AND utenti.id=""" + "'" + str(current_user.id) + "'"
+    materie_result = execute_query(materie_query).all()
+    # print(materie_result)
+    return render_template("attivita.html", user=current_user.email, materie=materie_result)

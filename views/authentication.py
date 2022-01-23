@@ -19,7 +19,7 @@ def registrazione():
         try:
             email = form.email.data + "@isisserra.edu.it"
             password = form.password.data
-            query = User(email, password)
+            query = User(email, password, form.class_id.data)
             db.session.add(query)
             db.session.commit()
             login_user(query, remember=form.remember.data)

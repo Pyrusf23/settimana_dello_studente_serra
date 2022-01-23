@@ -10,6 +10,15 @@ Base = declarative_base()
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
+from sqlalchemy import engine
+
+def execute_query(sqlraw):
+    db_conn = engine.create_engine("sqlite:///db.sqlite3")
+    db_conn.connect()
+    query_result = db_conn.execute(sqlraw)
+    db_conn.connect().close
+    return query_result
+
 
 class User(UserMixin, db.Model, Base):
     __tablename__ = "utenti"
