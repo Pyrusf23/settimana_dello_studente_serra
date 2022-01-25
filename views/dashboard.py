@@ -20,4 +20,16 @@ def activities():
 	AND utenti.id=""" + "'" + str(current_user.id) + "'"
     materie_result = execute_query(materie_query).all()
     # print(materie_result)
-    return render_template("attivita.html", user=current_user.email, materie=materie_result)
+    materie=[[[], [], [], [], [], [], []], [[], [], [], [], [], [], []], [[], [], [], [], [], [], []], [[], [], [], [], [], [], []], [[], [], [], [], [], [], []], [[], [], [], [], [], [], []]]
+    giorni = {9:0, 10:1, 11:2, 14:3, 15:4, 16:5}
+    for materia in materie_result:
+        giorno = giorni[materia[0]]
+        ora = (materia[1])-1
+        materie[giorno][ora] = materia[2]
+    # print(materie)
+    
+    # attivita_query = "placeholder"
+    # attivita_result = execute_query(attivita_query).all()
+
+
+    return render_template("attivita.html", user=current_user.email, materie=materie)

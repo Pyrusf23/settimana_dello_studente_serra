@@ -5,6 +5,6 @@ from models import Classe
 
 class LoginForm(FlaskForm):
 
-    email = StringField('Email', validators=[InputRequired(), Length(min=6, max=80)])
-    password = PasswordField('Password', validators=[InputRequired(), Length(min=6, max=20)])
+    email = StringField('Email', validators=[InputRequired(), Length(min=5, max=80)])
+    password = PasswordField('Password', validators=[InputRequired(), Length(min=5, max=20)])
     remember = BooleanField('Rimani collegato')
