@@ -1,8 +1,10 @@
 {% extends 'default.html' %}
 
-{% block title %}Orario{% endblock %}
+{% block title %}Attività{% endblock %}
 
 {% block content %}
+    <link rel="stylesheet" href="/static/CSS/attivita.css">
+
     <div class="table-responsive">
         <table class="table table-bordered table-dark">
             <thead>
@@ -22,7 +24,18 @@
                         <th scope="row">{{row+1}}a ora</th>
                         {% for col in range(6) %}
                             {% if orario[col][row] != 0 %}
-                                <td scope="col">{{ orario[col][row] }}</td>
+                                <td scope="col"><br>
+                                    {% for attivita in orario[col][row] %}
+                                        <div>
+                                            {{ attivita["nome_attivita"] }} <br>
+                                            {{ attivita["descrizione"] }} <br>
+                                            Responsabile/i: {{ attivita["responsabile"] }} <br>
+                                            Aula: {{ attivita["nome_lab"] }} <br>
+                                            Posti totali: {{ attivita["num_posti"] }} <br>
+                                            Numero iscritti: {{ attivita["num_iscritti"] }}
+                                        </div><br>
+                                    {% endfor %}
+                                </td>
                             {% else %}
                                 <td scope="col">attività non pervenuta</td>
                             {% endif %}
