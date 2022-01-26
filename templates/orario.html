@@ -1,9 +1,9 @@
 {% extends 'default.html' %}
 
-{% block title %}Attività{% endblock %}
+{% block title %}Orario{% endblock %}
 
 {% block content %}
-<link rel="stylesheet" href="/static/CSS/attivita.css">
+<link rel="stylesheet" href="/static/CSS/orario.css">
 
     <div class="container">
         <div class="row">
@@ -33,20 +33,15 @@
                     {{row+1}}a ora
                 </div>
                 {% for col in range(6) %}
-                    <div class="col">
-                        {% if materie[col][row] %}
-                            {{ materie[col][row] }}
-                        {% else %}
-                            <div>
-                                placeholder<br>corso di python con il professor sportelli
-                            </div>
-                            {#{% for attivita in materie[col][row] %}
-                                <div>
-                                    {{ attivita }}
-                                </div>
-                            {% endfor %}#}
-                        {% endif %}
-                    </div>
+                    {% if orario[col][row] != 0 %}
+                        <div class="col">
+                            {{ orario[col][row] }}
+                        </div>
+                    {% else %}
+                        <div class="col">
+                            
+                        </div>
+                    {% endif %}
                 {% endfor %}
             </div>
         {% endfor %}
