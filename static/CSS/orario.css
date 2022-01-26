@@ -1,8 +1,8 @@
-.container{
-    margin-top: 2rem;
+.table-responsive{
+    margin: 2rem;
 }
 
-.col{
+/* .col{
     display: flex;
     justify-content: center;
     align-items: center;
@@ -11,4 +11,4 @@
 
 .no-border{
     border: 0px;
-}
+} */

@@ -3,48 +3,78 @@
 {% block title %}Orario{% endblock %}
 
 {% block content %}
-<link rel="stylesheet" href="/static/CSS/orario.css">
+    <link rel="stylesheet" href="/static/CSS/orario.css">
 
-    <div class="container">
+    <div class="table-responsive">
+        <table class="table table-bordered table-dark">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">9 Febbraio</th>
+                    <th scope="col">10 Febbraio</th>
+                    <th scope="col">11 Febbraio</th>
+                    <th scope="col">14 Febbraio</th>
+                    <th scope="col">15 Febbraio</th>
+                    <th scope="col">16 Febbraio</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in range(7) %}
+                    <tr>
+                        <th scope="row">{{row+1}}a ora</th>
+                        {% for col in range(6) %}
+                            {% if orario[col][row] != 0 %}
+                                <td scope="col">{{ orario[col][row] }}</td>
+                            {% else %}
+                                <td scope="col">attività non pervenuta</td>
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {#<div class="container">
         <div class="row">
-            <div class="col-1 no-border"></div>
-            <div class="col">
+            <div class="col-sm-1 no-border"></div>
+            <div class="col-sm">
                 9 Febbraio
             </div>
-            <div class="col">
+            <div class="col-sm">
                 10 Febbraio
             </div>
-            <div class="col">
+            <div class="col-sm">
                 11 Febbraio
             </div>
-            <div class="col">
+            <div class="col-sm">
                 14 Febbraio
             </div>
-            <div class="col">
+            <div class="col-sm">
                 15 Febbraio
             </div>
-            <div class="col">
+            <div class="col-sm">
                 16 Febbraio
             </div>
         </div>
         {% for row in range(7) %}
             <div class="row">
-                <div class="col-1" style="border: 2px solid black; display: flex; justify-content: center; align-items: center;">
+                <div class="col-sm-1" style="border: 2px solid black; display: flex; justify-content: center; align-items: center;">
                     {{row+1}}a ora
                 </div>
                 {% for col in range(6) %}
                     {% if orario[col][row] != 0 %}
-                        <div class="col">
+                        <div class="col-sm">
                             {{ orario[col][row] }}
                         </div>
                     {% else %}
-                        <div class="col">
+                        <div class="col-sm">
                             
                         </div>
                     {% endif %}
                 {% endfor %}
             </div>
         {% endfor %}
-    </div>
+    </div>#}
 
 {% endblock %}
