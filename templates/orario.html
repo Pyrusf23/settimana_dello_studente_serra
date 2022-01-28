@@ -4,7 +4,7 @@
 
 {% block content %}
     <div class="table-responsive">
-        <table class="table table-bordered table-dark">
+        <table class="table table-bordered table-light table-striped">
             <thead>
                 <tr>
                     <th scope="col">#</th>
@@ -24,7 +24,7 @@
                             {% if orario[col][row] != 0 %}
                                 <td scope="col">{{ orario[col][row] }}</td>
                             {% else %}
-                                <td scope="col">attività non pervenuta</td>
+                                <td scope="col"></td>
                             {% endif %}
                         {% endfor %}
                     </tr>
