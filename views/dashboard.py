@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, request, flash
+from flask import Blueprint, render_template, redirect, url_for, request, flash, request
 from forms.loginForm import LoginForm
 from forms.registrazioneForm import RegistrazioneForm
 from models import db, User, execute_query
@@ -98,3 +98,19 @@ def activities():
     # print(orario)
 
     return render_template("attivita.html", user=current_user.email, orario=orario)
+
+# Il parametro request è il modulo request importato da flask, quindi richiama la funzione e passagli request
+def delete_(request): # Big head dai il nome che preferisci alla funzione
+
+    # reuest.arg ritorna un object che contiene tutti i metodi per prelevare gli argomenti della richiesta, qualsiasi essa sia (GET, POST, PUT, ecc...)
+    args = request.arg
+
+    # Frontend devi richiamare di nuovo la page con javascript e devi passare i parametri get all'url
+    # Per fare il redirect in JS e dare dei parametri get si usa window.location.replace(window.location.href + "?" + "actionType='delete'" + "&" + "id_attivita='id che ti prendi dal modal'");
+    if args.get('actionType') == "delete": # Il primo parametro actionType indica il tipo di azione, in questo caso delete
+
+        if args.get('id_attivita'):
+
+            # Qui fai la query delete con l'id passato dal parametro
+            # La funzione va richimata all'inizio nella funzione view che ti serve
+            # Finito!
