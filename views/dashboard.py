@@ -55,6 +55,7 @@ def timetable():
 @dashboard.route("/attivita", methods=('GET', 'POST'))
 @login_required
 def activities():
+    subscribeActivity(request)
     orario=[[[], [], [], [], [], [], []],
             [[], [], [], [], [], [], []],
             [[], [], [], [], [], [], []],
@@ -64,7 +65,7 @@ def activities():
             # Questa matrice segue quest'ordine giorno[ora[vettoreAttività[]]]
     giorni = {9:0, 10:1, 11:2, 14:3, 15:4, 16:5} # Dizionario che restituisce l'indice dei giorni della matrice in base al giorno del mese
 
-    attivita_query = """SELECT orari.giorno, orari.ora, attivita.id AS id_attivita, attivita.nome, attivita.descrizione, attivita.responsabile, attivita.num_iscritti, aule.denominazione AS nome_lab, aule.num_posti AS num_posti_aula
+    attivita_query = """SELECT orari.giorno, orari.ora, attivita_orari.id AS id_attivita, attivita.nome, attivita.descrizione, attivita.responsabile, attivita.num_iscritti, aule.denominazione AS nome_lab, aule.num_posti AS num_posti_aula
         FROM orari, attivita_orari, attivita, aule, classi, utenti
         WHERE orari.id=attivita_orari.id_orario
             AND attivita_orari.id_attivita=attivita.id
@@ -100,17 +101,30 @@ def activities():
     return render_template("attivita.html", user=current_user.email, orario=orario)
 
 # Il parametro request è il modulo request importato da flask, quindi richiama la funzione e passagli request
-def delete_(request): # Big head dai il nome che preferisci alla funzione
+def unsubscribeActivity(request): # Big head dai il nome che preferisci alla funzione
 
-    # reuest.arg ritorna un object che contiene tutti i metodi per prelevare gli argomenti della richiesta, qualsiasi essa sia (GET, POST, PUT, ecc...)
-    args = request.arg
+    # request.arg ritorna un object che contiene tutti i metodi per prelevare gli argomenti della richiesta, qualsiasi essa sia (GET, POST, PUT, ecc...)
+    args = request.args
 
     # Frontend devi richiamare di nuovo la page con javascript e devi passare i parametri get all'url
-    # Per fare il redirect in JS e dare dei parametri get si usa window.location.replace(window.location.href + "?" + "actionType='delete'" + "&" + "id_attivita='id che ti prendi dal modal'");
+    # Per fare il redirect in JS e dare dei parametri get si usa window.location.replace(window.location.href + "?" + "actionType=delete" + "&" + "id_attivita=id che ti prendi dal modal");
     if args.get('actionType') == "delete": # Il primo parametro actionType indica il tipo di azione, in questo caso delete
 
         if args.get('id_attivita'):
 
+            pass
             # Qui fai la query delete con l'id passato dal parametro
+            # La funzione va richimata all'inizio nella funzione view che ti serve
+            # Finito!
+
+def subscribeActivity(request):
+    args = request.args
+    # print(args)
+    if args.get('actionType') == "create": # Il primo parametro actionType indica il tipo di azione, in questo caso create
+        # print(args.get('id_attivita'))
+        if args.get('id_attivita'):
+            # print(args.get('id_attivita'))
+            execute_query("INSERT INTO utenti_attivita (id_utente, id_attivita_orario) VALUES (" + str(current_user.id) + "," + args.get('id_attivita') + ")")
+            # Qui fai la query create con l'id passato dal parametro
             # La funzione va richimata all'inizio nella funzione view che ti serve
             # Finito!
