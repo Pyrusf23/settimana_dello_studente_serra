@@ -163,8 +163,8 @@ class ConjUA(db.Model, Base):
     utente = relationship("User", back_populates="utenti_attivita")
     attivita_orario = relationship("ConjAO", back_populates="utenti_attivita")
 
-    def __init__(self, id_utente, id_attivita):
+    def __init__(self, id_utente, id_attivita_orario):
         self.id_utente = id_utente
-        self.id_attivita = id_attivita
+        self.id_attivita_orario = id_attivita_orario
 
 

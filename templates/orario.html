@@ -22,9 +22,20 @@
                         <th scope="row">{{row+1}}a ora</th>
                         {% for col in range(6) %}
                             {% if orario[col][row] != 0 %}
-                                <td scope="col">{{ orario[col][row] }}</td>
+                                <td scope="col">
+                                    <button type="button" class="btn btn-outline" data-bs-toggle="modal" data-bs-target="#timeModal"
+                                        data-bs-id="{{ orario[col][row]['id_attivita'] }}"
+                                        data-bs-nome="{{ orario[col][row]['nome_attivita'] }}"
+                                        data-bs-descr="{{ orario[col][row]['descrizione'] }}"
+                                        data-bs-resp="{{ orario[col][row]['responsabile'] }}"
+                                        data-bs-aula="{{ orario[col][row]['nome_lab'] }}"
+                                        data-bs-num_posti="{{ orario[col][row]['num_posti'] }}"
+                                        data-bs-num_iscritti="{{ orario[col][row]['num_iscritti'] }}">
+                                        {{ orario[col][row]["nome_attivita"] }}
+                                    </button> <br>
+                                </td>
                             {% else %}
-                                <td scope="col"></td>
+                                <td scope="col">Attività in classe</td>
                             {% endif %}
                         {% endfor %}
                     </tr>
@@ -33,46 +44,67 @@
         </table>
     </div>
 
-    {#<div class="container">
-        <div class="row">
-            <div class="col-sm-1 no-border"></div>
-            <div class="col-sm">
-                9 Febbraio
-            </div>
-            <div class="col-sm">
-                10 Febbraio
-            </div>
-            <div class="col-sm">
-                11 Febbraio
-            </div>
-            <div class="col-sm">
-                14 Febbraio
-            </div>
-            <div class="col-sm">
-                15 Febbraio
-            </div>
-            <div class="col-sm">
-                16 Febbraio
+    <div class="modal fade" id="timeModal" tabindex="-1" aria-labelledby="timeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="timeModalLabel">Attività</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Chiudi"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <p class="descr"></p>
+                    </div>
+                    <div class="mb-3">
+                        <p class="resp"></p>
+                    </div>
+                    <div class="mb-3">
+                        <p class="aula"></p>
+                    </div>
+                    <div class="mb-3">
+                        <p class="posti"></p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+                    <button type="button" class="btn btn-danger unsubscribe">Disiscriviti</button>
+                </div>
             </div>
         </div>
-        {% for row in range(7) %}
-            <div class="row">
-                <div class="col-sm-1" style="border: 2px solid black; display: flex; justify-content: center; align-items: center;">
-                    {{row+1}}a ora
-                </div>
-                {% for col in range(6) %}
-                    {% if orario[col][row] != 0 %}
-                        <div class="col-sm">
-                            {{ orario[col][row] }}
-                        </div>
-                    {% else %}
-                        <div class="col-sm">
-                            
-                        </div>
-                    {% endif %}
-                {% endfor %}
-            </div>
-        {% endfor %}
-    </div>#}
+    </div>
+
+    <script>
+
+        let timeModal = document.getElementById('timeModal')
+        timeModal.addEventListener('show.bs.modal', function (event) {
+            // Button that triggered the modal
+            let button = event.relatedTarget
+            // Extract info from data-bs-* attributes
+            let id = button.getAttribute('data-bs-id')
+            let nome = button.getAttribute('data-bs-nome')
+            let descr = button.getAttribute('data-bs-descr')
+            let resp = button.getAttribute('data-bs-resp')
+            let aula = button.getAttribute('data-bs-aula')
+            let num_posti = button.getAttribute('data-bs-num_posti')
+            let num_iscritti = button.getAttribute('data-bs-num_iscritti')
+
+            let modalTitle = timeModal.querySelector('.modal-title')
+            let modalDescr = timeModal.querySelector('.descr')
+            let modalResp = timeModal.querySelector('.resp')
+            let modalAula = timeModal.querySelector('.aula')
+            let modalPosti = timeModal.querySelector('.posti')          
+            
+            modalTitle.textContent = nome
+            modalDescr.textContent = descr
+            modalResp.textContent = "Responsabile/i: " + resp
+            modalAula.textContent = "Aula: " + aula
+            modalPosti.textContent = "posti totali: " + num_posti + " numero iscritti: " + num_iscritti
+
+            let modalSubscribe = timeModal.querySelector('.unsubscribe')
+            modalSubscribe.onclick = function() {
+                window.location.replace(window.location.pathname + "?actionType=delete&id_attivita=" + id);
+            }
+        })
+    </script>
 
 {% endblock %}
