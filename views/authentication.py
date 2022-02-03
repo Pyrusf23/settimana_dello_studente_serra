@@ -12,7 +12,7 @@ auth = Blueprint('auth', __name__)
 @auth.route("/registrazione", methods=('GET', 'POST'))
 def registrazione():
     if current_user.is_authenticated:
-        return redirect(url_for('dashboard.timetable'))
+        return redirect(url_for('dashboard.activities'))
     form = RegistrazioneForm()
 
     if form.validate_on_submit() and request.method == 'POST':
@@ -31,7 +31,7 @@ def registrazione():
 @auth.route("/login", methods=('GET', 'POST'))
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('dashboard.timetable'))
+        return redirect(url_for('dashboard.activities'))
     form = LoginForm()
 
     if form.validate_on_submit() and request.method == 'POST':

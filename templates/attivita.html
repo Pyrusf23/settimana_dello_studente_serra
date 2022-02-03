@@ -72,6 +72,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
                     <button type="button" class="btn btn-success subscribe">Iscriviti</button>
+                    <button type="button" class="btn btn-danger unsubscribe">Disiscriviti</button>
                 </div>
             </div>
         </div>
@@ -108,7 +109,14 @@
             modalSubscribe.onclick = function() {
                 window.location.replace(window.location.pathname + "?actionType=create&id_attivita=" + id);
             }
+
+            let modalUnsubscribe = timeModal.querySelector('.unsubscribe')
+            modalUnsubscribe.onclick = function() {
+                window.location.replace(window.location.pathname + "?actionType=delete&id_attivita=" + id);
+            }
         })
+
+        
     </script>
 
 {% endblock %}
