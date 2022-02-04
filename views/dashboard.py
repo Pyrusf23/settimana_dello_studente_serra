@@ -74,14 +74,12 @@ dashboard = Blueprint('dashboard', __name__)
 @login_required
 def activities():
     subscribeActivity(request)
+    unsubscribeActivity(request)
     orario=[[[], [], [], [], [], [], []],
-            [[], [], [], [], [], [], []],
-            [[], [], [], [], [], [], []],
-            [[], [], [], [], [], [], []],
             [[], [], [], [], [], [], []],
             [[], [], [], [], [], [], []]] # Chri mi spiace per l'ineleganza ma purtroppo dovevo necessariamente fare questa matrice perché sennò jinja impazziva
             # Questa matrice segue quest'ordine giorno[ora[vettoreAttività[]]]
-    giorni = {9:0, 10:1, 11:2, 14:3, 15:4, 16:5} # Dizionario che restituisce l'indice dei giorni della matrice in base al giorno del mese
+    giorni = {14:0, 15:1, 16:2} # Dizionario che restituisce l'indice dei giorni della matrice in base al giorno del mese
 
     attivita_query = """SELECT orari.giorno, orari.ora, attivita_orari.id AS id_attivita, attivita.nome, attivita.descrizione, attivita.responsabile, attivita.num_iscritti, aule.denominazione AS nome_lab, aule.num_posti AS num_posti_aula
         FROM orari, attivita_orari, attivita, aule, classi, utenti
@@ -102,42 +100,6 @@ def activities():
                                                           #                        [7]nome_lab,
                                                           #                        [8]num_posti)
     # print(attivita_result)
-    for attivita in attivita_result:
-        giorno = giorni[attivita[0]]
-        ora = (attivita[1])-1
-        orario[giorno][ora].append({
-            "id_attivita" : attivita[2],
-            "nome_attivita" : attivita[3],
-            "descrizione" : attivita[4],
-            "responsabile" : attivita[5],
-            "num_iscritti" : attivita[6],
-            "nome_lab" : attivita[7],
-            "num_posti" : attivita[8]
-        }) # Aggiunge l'attività al vettore
-    # print(orario)
-
-    orario=[[0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0]] # Chri mi spiace per l'ineleganza ma purtroppo dovevo necessariamente fare questa matrice perché sennò jinja impazziva
-            # Questa matrice segue quest'ordine giorno[ora[placeholder]]
-    giorni = {9:0, 10:1, 11:2, 14:3, 15:4, 16:5} # Dizionario che restituisce l'indice dei giorni della matrice in base al giorno del mese
-
-    materie_query = """SELECT orari.giorno, orari.ora, materie.nome_materia
-        FROM utenti, materie, orari, orari_materie_classi
-        WHERE orari.id=orari_materie_classi.id_orario
-            AND materie.id=orari_materie_classi.id_materia
-            AND orari_materie_classi.id_classe=utenti.id_classe
-            AND utenti.id=""" + "'" + str(current_user.id) + "'"
-    materie_result = execute_query(materie_query).all() # Restituisce una tupla (giornoDelMese, ora, materia)
-    # print(materie_result)
-    for materia in materie_result:
-        giorno = giorni[materia[0]] # Traduce il giorno del mese da query nell'indice appropriato per la matrice
-        ora = (materia[1])-1 # Riduce di uno l'ora del giorno per renderlo appropriato alla matrice
-        orario[giorno][ora] = materia[2]
-    # print(orario)
 
     attivitaXutenti_query = """SELECT orari.giorno, orari.ora, attivita_orari.id AS id_attivita, attivita.nome, attivita.descrizione, attivita.responsabile, attivita.num_iscritti, aule.denominazione AS nome_lab, aule.num_posti AS num_posti_aula
         FROM orari, attivita, attivita_orari, utenti_attivita, utenti, aule
@@ -157,18 +119,26 @@ def activities():
                                                                         #                        [7]nome_lab,
                                                                         #                        [8]num_posti)
     # print(attivitaXutenti_result)
-    for attivita in attivitaXutenti_result:
+    for attivita in attivita_result:
         giorno = giorni[attivita[0]]
         ora = (attivita[1])-1
-        orario[giorno][ora] = ({
+        
+        subscribed = 0
+        for utenti_attivita in attivitaXutenti_result:
+            attId_attivita = (utenti_attivita[2])
+            if attId_attivita == attivita[2]:
+                subscribed = 1
+
+        orario[giorno][ora].append({
             "id_attivita" : attivita[2],
             "nome_attivita" : attivita[3],
             "descrizione" : attivita[4],
             "responsabile" : attivita[5],
             "num_iscritti" : attivita[6],
             "nome_lab" : attivita[7],
-            "num_posti" : attivita[8]
-        }) # Sostituisce la materia dove c'è un'attività
+            "num_posti" : attivita[8],
+            "iscritto" : subscribed
+        }) # Aggiunge l'attività al vettore
     # print(orario)
 
     return render_template("attivita.html", user=current_user.email, orario=orario)
