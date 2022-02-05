@@ -23,7 +23,7 @@
                             {% if orario[col][row] != 0 %}
                                 <td scope="col">
                                     {% for attivita in orario[col][row] %}
-                                        <button type="button" class="btn btn-outline mb-1 {{ 'btn-success' if attivita['iscritto'] else '' }}" data-bs-toggle="modal" data-bs-target="#activityModal"
+                                        <button type="button" class="btn btn-outline mb-1 {{ 'btn-success' if attivita['iscritto'] else '' }} {{ 'btn-danger' if not attivita['iscritto'] and attivita['num_iscritti']>=attivita['num_posti'] else '' }}" data-bs-toggle="modal" data-bs-target="#activityModal"
                                             data-bs-id="{{ attivita['id_attivita'] }}"
                                             data-bs-nome="{{ attivita['nome_attivita'] }}"
                                             data-bs-descr="{{ attivita['descrizione'] }}"
