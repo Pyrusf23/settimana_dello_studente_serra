@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash, request
 from forms.loginForm import LoginForm
 from forms.registrazioneForm import RegistrazioneForm
-from models import Attivita, ConjAO, ConjUA, db, User, execute_query
+from models import Attivita, Aula, ConjAO, ConjUA, db, User, execute_query
 from flask_login import login_user, current_user, logout_user, login_required
 
 
@@ -88,7 +88,6 @@ def activities():
             AND attivita.id_aula=aule.id
             AND aule.centrale_succursale=classi.centrale_succursale
             AND classi.id=utenti.id_classe
-        	AND attivita.num_iscritti<num_posti_aula
             AND utenti.id=""" + "'" + str(current_user.id) + "'"
     attivita_result = execute_query(attivita_query).all() # Restituisce una tupla ([0]giornoDelMese,
                                                           #                        [1]ora,
@@ -100,6 +99,8 @@ def activities():
                                                           #                        [7]nome_lab,
                                                           #                        [8]num_posti)
     # print(attivita_result)
+    # Qui giaciono le query di merda di Pyer
+    # AND attivita.num_iscritti<num_posti_aula
 
     attivitaXutenti_query = """SELECT orari.giorno, orari.ora, attivita_orari.id AS id_attivita, attivita.nome, attivita.descrizione, attivita.responsabile, attivita.num_iscritti, aule.denominazione AS nome_lab, aule.num_posti AS num_posti_aula
         FROM orari, attivita, attivita_orari, utenti_attivita, utenti, aule
@@ -235,26 +236,46 @@ def subscribeActivity(request):
                 db.session.commit()
 
             else:
-                # Aggiunge il nuovo record
-                newConjUA = ConjUA(id_utente=current_user.id, id_attivita_orario=id_attivita)
-                db.session.add(newConjUA)
-                db.session.commit() # Devo per forza committare perché non so se esiste una funzione per prendersi l'ultimo record aggiunto
+                
+                num_posti_aula = Aula.query.filter_by(
+                    id = Attivita.query.filter_by(
+                        id = ConjAO.query.filter_by(
+                            id = id_attivita
+                        ).first().id_attivita
+                    ).first().id_aula
+                ).first().num_posti
 
-                id_utente_attivita = execute_query(query).first()[0] # Rifaccio la query di prima perché adesso ci sarà un record in db
-         
-                # Aumento di uno il numero di iscritti all'attività interessata
-                increase_iscritti = Attivita.query.filter_by(id=
-         
-                    ConjAO.query.filter_by(id=
-         
-                        ConjUA.query.filter_by(id=id_utente_attivita).first().id_attivita_orario
-         
+                num_iscritti = Attivita.query.filter_by(
+                    id = ConjAO.query.filter_by(
+                        id = id_attivita
                     ).first().id_attivita
-         
-                ).update({Attivita.num_iscritti: Attivita.num_iscritti+1})
-         
-                db.session.commit() # Committo gli update
-                # execute_query("INSERT INTO utenti_attivita (id_utente, id_attivita_orario) VALUES (" + str(current_user.id) + "," + id_attivita + ")")
-                # Qui fai la query create con l'id passato dal parametro
-                # La funzione va richimata all'inizio nella funzione view che ti serve
-                # Finito!
+                ).first().num_iscritti
+
+                if(num_iscritti < num_posti_aula):
+
+                    # Aggiunge il nuovo record
+                    newConjUA = ConjUA(id_utente=current_user.id, id_attivita_orario=id_attivita)
+                    db.session.add(newConjUA)
+                    db.session.commit() # Devo per forza committare perché non so se esiste una funzione per prendersi l'ultimo record aggiunto
+
+                    id_utente_attivita = execute_query(query).first()[0] # Rifaccio la query di prima perché adesso ci sarà un record in db
+            
+                    # Aumento di uno il numero di iscritti all'attività interessata
+                    increase_iscritti = Attivita.query.filter_by(id=
+            
+                        ConjAO.query.filter_by(id=
+            
+                            ConjUA.query.filter_by(id=id_utente_attivita).first().id_attivita_orario
+            
+                        ).first().id_attivita
+            
+                    ).update({Attivita.num_iscritti: Attivita.num_iscritti+1})
+            
+                    db.session.commit() # Committo gli update
+                    # execute_query("INSERT INTO utenti_attivita (id_utente, id_attivita_orario) VALUES (" + str(current_user.id) + "," + id_attivita + ")")
+                    # Qui fai la query create con l'id passato dal parametro
+                    # La funzione va richimata all'inizio nella funzione view che ti serve
+                    # Finito!
+                else:
+                    # L'attività è al completo
+                    flash("I posti sono terminati")
