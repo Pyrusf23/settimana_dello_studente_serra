@@ -13,7 +13,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy import engine
 
 def execute_query(sqlraw):
-    db_conn = engine.create_engine("sqlite:///db.sqlite3")
+    db_conn = engine.create_engine("sqlite:////home/SettimanadelloStudenteSerra/settimana_dello_studente_serra/db.sqlite3")
     db_conn.connect()
     query_result = db_conn.execute(sqlraw)
     db_conn.connect().close
@@ -75,7 +75,7 @@ class Materia(db.Model, Base):
 
     id = db.Column(db.Integer, primary_key=True)
     nome_materia = db.Column(db.String(40), nullable=False, unique=True)
-    
+
     orari_materie_classi = relationship("ConjOMC", back_populates="materia")
 
     def __init__(self, nome_materia):
@@ -166,5 +166,4 @@ class ConjUA(db.Model, Base):
     def __init__(self, id_utente, id_attivita_orario):
         self.id_utente = id_utente
         self.id_attivita_orario = id_attivita_orario
-
 

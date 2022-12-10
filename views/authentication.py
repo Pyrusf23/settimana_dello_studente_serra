@@ -18,6 +18,7 @@ def registrazione():
     if form.validate_on_submit() and request.method == 'POST':
         try:
             email = form.email.data + "@isisserra.edu.it"
+            email = email.lower()
             password = form.password.data
             query = User(email, password, form.class_id.data)
             db.session.add(query)
@@ -35,14 +36,15 @@ def login():
     form = LoginForm()
 
     if form.validate_on_submit() and request.method == 'POST':
-        user = User.query.filter_by(email=form.email.data).first()
+        email = form.email.data.lower()
+        user = User.query.filter_by(email=email).first()
         if user:
             if user.verifyPassword(form.password.data):
                 login_user(user, remember=form.remember.data)
                 return redirect(url_for('main.index'))
             else: flash('Credenziali errate!')
         else: flash('Credenziali errate!')
-    
+
     return render_template('login.html', form=form)
 
 @auth.route("/logout")

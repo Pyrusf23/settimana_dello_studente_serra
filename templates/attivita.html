@@ -79,7 +79,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
-                    <button type="button" class="btn subscribe">Errore</button>
+                    {# <button type="button" class="btn subscribe">Errore</button> #}
                 </div>
             </div>
         </div>
@@ -105,15 +105,15 @@
             let modalDescr = activityModal.querySelector('.descr')
             let modalResp = activityModal.querySelector('.resp')
             let modalAula = activityModal.querySelector('.aula')
-            let modalPosti = activityModal.querySelector('.posti')          
-            
+            let modalPosti = activityModal.querySelector('.posti')
+
             modalTitle.textContent = nome
             modalDescr.textContent = descr
             modalResp.textContent = "Responsabile/i: " + resp
             modalAula.textContent = "Aula: " + aula
             modalPosti.textContent = "posti totali: " + num_posti + " numero iscritti: " + num_iscritti
 
-            let modalSubscribe = activityModal.querySelector('.subscribe')
+            /*let modalSubscribe = activityModal.querySelector('.subscribe')
             if(subscribed != 0) { // ti giuro che non funziona mettere solo la varibile, neanche se contiene true o false
                 modalSubscribe.textContent = "Disiscriviti";
                 modalSubscribe.className = ("btn btn-danger subscribe");
@@ -126,9 +126,9 @@
                 modalSubscribe.onclick = function() {
                     window.location.replace(window.location.pathname + "?actionType=create&id_attivita=" + id);
                 }
-            }
+            } */
         })
-        
+
     </script>
 
 {% endblock %}

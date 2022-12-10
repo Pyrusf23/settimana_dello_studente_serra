@@ -34,8 +34,10 @@
                 {% endfor %}
             {% endif %}
             {% endwith %}
-            <div class="btn-container">
+            <div class="btn-container mt-4" style="flex-direction: column; justify-content: space-between;">
                 <input type="submit" class="btn my-btn" id="id_button" value="Accedi">
+                <span> oppure </span>
+                <a class="btn my-btn" href="{{ url_for('auth.registrazione') }}" role="button">Registrati</a>
             </div>
         </form>
     </div>

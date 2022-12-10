@@ -73,8 +73,8 @@ dashboard = Blueprint('dashboard', __name__)
 @dashboard.route("/attivita", methods=('GET', 'POST'))
 @login_required
 def activities():
-    subscribeActivity(request)
-    unsubscribeActivity(request)
+    # subscribeActivity(request)
+    # unsubscribeActivity(request)
     orario=[[[], [], [], [], [], [], []],
             [[], [], [], [], [], [], []],
             [[], [], [], [], [], [], []]] # Chri mi spiace per l'ineleganza ma purtroppo dovevo necessariamente fare questa matrice perché sennò jinja impazziva
@@ -123,7 +123,7 @@ def activities():
     for attivita in attivita_result:
         giorno = giorni[attivita[0]]
         ora = (attivita[1])-1
-        
+
         subscribed = 0
         for utenti_attivita in attivitaXutenti_result:
             attId_attivita = (utenti_attivita[2])
@@ -159,7 +159,7 @@ def unsubscribeActivity(request): # Big head dai il nome che preferisci alla fun
         if id_attivita:
             # print(id_attivita)
             try:
-                id_utente_attivita = ConjUA.query.filter_by(id_attivita_orario=id_attivita).first()
+                id_utente_attivita = ConjUA.query.filter_by(id_utente=current_user.id, id_attivita_orario=id_attivita).first()
                 # print(id_utente_attivita.id)
                 query = ConjUA.query.get(id_utente_attivita.id)
                 # print(query)
@@ -236,7 +236,7 @@ def subscribeActivity(request):
                 db.session.commit()
 
             else:
-                
+
                 num_posti_aula = Aula.query.filter_by(
                     id = Attivita.query.filter_by(
                         id = ConjAO.query.filter_by(
@@ -259,18 +259,18 @@ def subscribeActivity(request):
                     db.session.commit() # Devo per forza committare perché non so se esiste una funzione per prendersi l'ultimo record aggiunto
 
                     id_utente_attivita = execute_query(query).first()[0] # Rifaccio la query di prima perché adesso ci sarà un record in db
-            
+
                     # Aumento di uno il numero di iscritti all'attività interessata
                     increase_iscritti = Attivita.query.filter_by(id=
-            
+
                         ConjAO.query.filter_by(id=
-            
+
                             ConjUA.query.filter_by(id=id_utente_attivita).first().id_attivita_orario
-            
+
                         ).first().id_attivita
-            
+
                     ).update({Attivita.num_iscritti: Attivita.num_iscritti+1})
-            
+
                     db.session.commit() # Committo gli update
                     # execute_query("INSERT INTO utenti_attivita (id_utente, id_attivita_orario) VALUES (" + str(current_user.id) + "," + id_attivita + ")")
                     # Qui fai la query create con l'id passato dal parametro
