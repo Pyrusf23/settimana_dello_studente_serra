@@ -73,13 +73,14 @@ dashboard = Blueprint('dashboard', __name__)
 @dashboard.route("/attivita", methods=('GET', 'POST'))
 @login_required
 def activities():
-    # subscribeActivity(request)
-    # unsubscribeActivity(request)
+    subscribeActivity(request)
+    unsubscribeActivity(request)
     orario=[[[], [], [], [], [], [], []],
+            [[], [], [], [], [], [], []],
             [[], [], [], [], [], [], []],
             [[], [], [], [], [], [], []]] # Chri mi spiace per l'ineleganza ma purtroppo dovevo necessariamente fare questa matrice perché sennò jinja impazziva
             # Questa matrice segue quest'ordine giorno[ora[vettoreAttività[]]]
-    giorni = {14:0, 15:1, 16:2} # Dizionario che restituisce l'indice dei giorni della matrice in base al giorno del mese
+    giorni = {19:0, 20:1, 21:2, 22:3} # Dizionario che restituisce l'indice dei giorni della matrice in base al giorno del mese
 
     attivita_query = """SELECT orari.giorno, orari.ora, attivita_orari.id AS id_attivita, attivita.nome, attivita.descrizione, attivita.responsabile, attivita.num_iscritti, aule.denominazione AS nome_lab, aule.num_posti AS num_posti_aula
         FROM orari, attivita_orari, attivita, aule, classi, utenti
@@ -190,10 +191,10 @@ def subscribeActivity(request):
     # print(args)
     if args.get('actionType') == "create": # Il primo parametro actionType indica il tipo di azione, in questo caso create
         # print(args.get('id_attivita'))
-        id_attivita = args.get('id_attivita') # Ricordo che nonostante si chiami id_attivita indica l'id_attivita_orario
-        if id_attivita: # Questa sarò complicata da spiegare, 01/02/2022, 01:23
+        id_attivita_orario = args.get('id_attivita') # Ricordo che nonostante si chiami id_attivita indica l'id_attivita_orario
+        if id_attivita_orario: # Questa sarò complicata da spiegare, 01/02/2022, 01:23
 
-            id_orario = ConjAO.query.filter_by(id=id_attivita).first().id_orario # Prendo l'id_orario conoscendo l'id_attivita_orario a cui è collegato
+            id_orario = ConjAO.query.filter_by(id=id_attivita_orario).first().id_orario # Prendo l'id_orario conoscendo l'id_attivita_orario a cui è collegato
             # print(id_orario)
             query = """SELECT utenti_attivita.id
                 FROM attivita_orari, utenti_attivita, utenti
@@ -220,7 +221,7 @@ def subscribeActivity(request):
                 ).update({Attivita.num_iscritti: Attivita.num_iscritti-1})
 
                 # Modifica il record utente_attivita cambiando l'id_attivita_orario
-                newConjUA = ConjUA.query.filter_by(id=id_utente_attivita).update({ConjUA.id_attivita_orario: id_attivita})
+                newConjUA = ConjUA.query.filter_by(id=id_utente_attivita).update({ConjUA.id_attivita_orario: id_attivita_orario})
 
                 # Stessa cosa di prima ma aumenta di 1 l'attività interessata
                 increase_iscritti = Attivita.query.filter_by(id=
@@ -240,42 +241,64 @@ def subscribeActivity(request):
                 num_posti_aula = Aula.query.filter_by(
                     id = Attivita.query.filter_by(
                         id = ConjAO.query.filter_by(
-                            id = id_attivita
+                            id = id_attivita_orario
                         ).first().id_attivita
                     ).first().id_aula
                 ).first().num_posti
 
                 num_iscritti = Attivita.query.filter_by(
                     id = ConjAO.query.filter_by(
-                        id = id_attivita
+                        id = id_attivita_orario
                     ).first().id_attivita
                 ).first().num_iscritti
 
                 if(num_iscritti < num_posti_aula):
 
-                    # Aggiunge il nuovo record
-                    newConjUA = ConjUA(id_utente=current_user.id, id_attivita_orario=id_attivita)
-                    db.session.add(newConjUA)
-                    db.session.commit() # Devo per forza committare perché non so se esiste una funzione per prendersi l'ultimo record aggiunto
+                    # Sto per fare una cazzata
+                    # Inizio cazzata 16/12/2022 20:34
+                    
+                    id_attivita = ConjAO.query.filter_by(id=id_attivita_orario).first().id_attivita # Prendo l'id_attivita conoscendo l'id_attivita_orario a cui è collegato
 
-                    id_utente_attivita = execute_query(query).first()[0] # Rifaccio la query di prima perché adesso ci sarà un record in db
+                    query_check_attivita = """SELECT utenti_attivita.id
+                        FROM attivita_orari, utenti_attivita, utenti
+                        WHERE attivita_orari.id=utenti_attivita.id_attivita_orario
+                            AND utenti_attivita.id_utente=utenti.id
+                            AND utenti.id='""" + str(current_user.id) + """'
+                            AND attivita_orari.id_attivita='""" + str(id_attivita) + "'"
+                    id_attivita = execute_query(query_check_attivita).all() # Prendo tutte le attivita a cui l'utente è iscritto con lo stesso id_attivita della nostra attività
+                    print(id_attivita)
+                    if id_attivita == []:
 
-                    # Aumento di uno il numero di iscritti all'attività interessata
-                    increase_iscritti = Attivita.query.filter_by(id=
+                        # "Fine" cazzata 16/12/2022 21:14
+                        
 
-                        ConjAO.query.filter_by(id=
+                        # Aggiunge il nuovo record
+                        newConjUA = ConjUA(id_utente=current_user.id, id_attivita_orario=id_attivita_orario)
+                        db.session.add(newConjUA)
+                        db.session.commit() # Devo per forza committare perché non so se esiste una funzione per prendersi l'ultimo record aggiunto
 
-                            ConjUA.query.filter_by(id=id_utente_attivita).first().id_attivita_orario
+                        id_utente_attivita = execute_query(query).first()[0] # Rifaccio la query di prima perché adesso ci sarà un record in db
 
-                        ).first().id_attivita
+                        # Aumento di uno il numero di iscritti all'attività interessata
+                        increase_iscritti = Attivita.query.filter_by(id=
 
-                    ).update({Attivita.num_iscritti: Attivita.num_iscritti+1})
+                            ConjAO.query.filter_by(id=
 
-                    db.session.commit() # Committo gli update
-                    # execute_query("INSERT INTO utenti_attivita (id_utente, id_attivita_orario) VALUES (" + str(current_user.id) + "," + id_attivita + ")")
-                    # Qui fai la query create con l'id passato dal parametro
-                    # La funzione va richimata all'inizio nella funzione view che ti serve
-                    # Finito!
+                                ConjUA.query.filter_by(id=id_utente_attivita).first().id_attivita_orario
+
+                            ).first().id_attivita
+
+                        ).update({Attivita.num_iscritti: Attivita.num_iscritti+1})
+
+                        db.session.commit() # Committo gli update
+                        # execute_query("INSERT INTO utenti_attivita (id_utente, id_attivita_orario) VALUES (" + str(current_user.id) + "," + id_attivita + ")")
+                        # Qui fai la query create con l'id passato dal parametro
+                        # La funzione va richimata all'inizio nella funzione view che ti serve
+                        # Finito!
+                    else:
+                        # L'utente è già iscritto a questa attività
+                        flash("Sei già iscritto a questa attività")
+
                 else:
                     # L'attività è al completo
                     flash("I posti sono terminati")
