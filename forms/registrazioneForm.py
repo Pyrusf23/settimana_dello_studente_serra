@@ -13,6 +13,6 @@ class RegistrazioneForm(FlaskForm):
         ]
 
     email = StringField('Email', validators=[InputRequired(), Length(min=5, max=80), regexp("^([A-Z]|[a-z]){1,}(\.([A-Z]|[a-z]){1,}){1,}$", flags=0, message="ERRORE: Email non valida")], render_kw={"placeholder": "Mail istituzionale"})
-    password = PasswordField('Password', validators=[InputRequired(), Length(min=5, max=80)], render_kw={"placeholder": "Minimo 5 caratteri, massimo 80"})
+    password = PasswordField('Password', validators=[InputRequired(), Length(min=5, max=20)], render_kw={"placeholder": "Minimo 5 caratteri, massimo 20"})
     class_id = SelectField("Classe", coerce=int)
     remember = BooleanField('Rimani collegato')
