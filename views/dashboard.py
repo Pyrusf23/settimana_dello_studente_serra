@@ -73,8 +73,8 @@ dashboard = Blueprint('dashboard', __name__)
 @dashboard.route("/attivita", methods=('GET', 'POST'))
 @login_required
 def activities():
-    subscribeActivity(request)
-    unsubscribeActivity(request)
+    #subscribeActivity(request)
+    #unsubscribeActivity(request)
     orario=[[[], [], [], [], [], [], []],
             [[], [], [], [], [], [], []],
             [[], [], [], [], [], [], []],
@@ -256,7 +256,7 @@ def subscribeActivity(request):
 
                     # Sto per fare una cazzata
                     # Inizio cazzata 16/12/2022 20:34
-                    
+
                     id_attivita = ConjAO.query.filter_by(id=id_attivita_orario).first().id_attivita # Prendo l'id_attivita conoscendo l'id_attivita_orario a cui è collegato
 
                     query_check_attivita = """SELECT utenti_attivita.id
@@ -270,7 +270,7 @@ def subscribeActivity(request):
                     if id_attivita == []:
 
                         # "Fine" cazzata 16/12/2022 21:14
-                        
+
 
                         # Aggiunge il nuovo record
                         newConjUA = ConjUA(id_utente=current_user.id, id_attivita_orario=id_attivita_orario)
