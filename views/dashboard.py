@@ -73,8 +73,8 @@ dashboard = Blueprint('dashboard', __name__)
 @dashboard.route("/attivita", methods=('GET', 'POST'))
 @login_required
 def activities():
-    #subscribeActivity(request)
-    #unsubscribeActivity(request)
+    subscribeActivity(request)
+    unsubscribeActivity(request)
     orario=[[[], [], [], [], [], [], []],
             [[], [], [], [], [], [], []],
             [[], [], [], [], [], [], []],
